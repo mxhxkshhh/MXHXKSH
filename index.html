@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mxhxksh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0b0b0f;
+    --bg-2: #161019;
+    --red: #ed1d24;
+    --gold: #f2b705;
+    --purple: #4b2e83;
+    --cream: #f5f1e8;
+    --ink: #0b0b0f;
+    --muted: #9a8f86;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: var(--bg);
+    color: var(--cream);
+    font-family:"Space Grotesk", sans-serif;
+    overflow-x:hidden;
+    cursor: none;
+  }
+
+  @media (pointer: coarse){ body{ cursor:auto; } }
+
+  .display{ font-family:"Anton", sans-serif; text-transform:uppercase; letter-spacing:0.01em; }
+
+  /* ---------- custom cursor ---------- */
+  #cursor{
+    position:fixed; top:0; left:0; width:26px; height:26px;
+    border:2px solid var(--gold); border-radius:50%;
+    pointer-events:none; z-index:9999; mix-blend-mode:difference;
+    transform:translate(-50%,-50%);
+    transition: width .18s ease, height .18s ease, border-color .18s ease, background .18s ease;
+  }
+  #cursor.big{ width:56px; height:56px; background:rgba(242,183,5,0.15); }
+  @media (pointer: coarse){ #cursor{ display:none; } }
+
+  /* ---------- loader curtain ---------- */
+  .curtain{ position:fixed; inset:0; z-index:9000; display:flex; pointer-events:none; }
+  .curtain div{ flex:1; background:var(--bg); }
+  .curtain div:first-child{ animation: slideL 1s 0.5s cubic-bezier(.77,0,.18,1) forwards; }
+  .curtain div:last-child{ animation: slideR 1s 0.5s cubic-bezier(.77,0,.18,1) forwards; }
+  @keyframes slideL{ to{ transform:translateX(-100%); } }
+  @keyframes slideR{ to{ transform:translateX(100%); } }
+
+  /* ---------- cinebars ---------- */
+  .cinebar{ position:fixed; left:0; right:0; height:9vh; background:#000; z-index:500; pointer-events:none; }
+  .cinebar.top{ top:0; animation: barIn .9s 1.3s cubic-bezier(.16,1,.3,1) forwards; }
+  .cinebar.bottom{ bottom:0; animation: barInB .9s 1.3s cubic-bezier(.16,1,.3,1) forwards; }
+  @keyframes barIn{ from{ height:9vh; } to{ height:0; } }
+  @keyframes barInB{ from{ height:9vh; } to{ height:0; } }
+
+  /* ---------- halftone texture ---------- */
+  .halftone{
+    position:absolute; inset:0;
+    background-image: radial-gradient(circle, rgba(245,241,232,0.09) 1px, transparent 1.4px);
+    background-size: 11px 11px;
+    pointer-events:none;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative; min-height:100vh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+    overflow:hidden;
+    background:
+      radial-gradient(60% 50% at calc(50% + var(--mx,0)*1px) calc(35% + var(--my,0)*1px), rgba(237,29,36,0.28), transparent 60%),
+      radial-gradient(50% 45% at 80% 85%, rgba(75,46,131,0.35), transparent 65%),
+      var(--bg-2);
+  }
+
+  .burst{
+    position:absolute; width:120vmax; height:120vmax; top:50%; left:50%;
+    background: conic-gradient(from 0deg, transparent 0deg 14deg, rgba(242,183,5,0.05) 14deg 16deg, transparent 16deg 30deg);
+    transform: translate(-50%,-50%) translate(calc(var(--mx,0)*-0.6px), calc(var(--my,0)*-0.6px)) rotate(0deg);
+    animation: spin 60s linear infinite;
+    pointer-events:none;
+  }
+  @keyframes spin{ to{ transform: translate(-50%,-50%) rotate(360deg); } }
+
+  .hero-inner{ position:relative; z-index:2; padding: 0 20px; }
+
+  .eyebrow-tag{
+    display:inline-block; padding:6px 16px; border:1px solid rgba(245,241,232,0.3);
+    border-radius:100px; font-size:0.8rem; color:var(--gold); margin-bottom:26px;
+    letter-spacing:0.02em; background:rgba(0,0,0,0.2); backdrop-filter: blur(3px);
+  }
+
+  h1.title{
+    font-size: clamp(3.2rem, 15vw, 9.5rem);
+    line-height:0.92;
+    color: var(--cream);
+    text-shadow: 4px 4px 0 var(--red), 8px 8px 0 rgba(0,0,0,0.5);
+  }
+  h1.title span{
+    display:inline-block;
+    opacity:0; transform: translateY(60px) rotate(6deg);
+    animation: letterIn 0.7s cubic-bezier(.2,1,.3,1) forwards;
+  }
+  h1.title span:nth-child(1){ animation-delay:1.5s; }
+  h1.title span:nth-child(2){ animation-delay:1.58s; }
+  h1.title span:nth-child(3){ animation-delay:1.66s; }
+  h1.title span:nth-child(4){ animation-delay:1.74s; }
+  h1.title span:nth-child(5){ animation-delay:1.82s; }
+  h1.title span:nth-child(6){ animation-delay:1.9s; }
+  h1.title span:nth-child(7){ animation-delay:1.98s; }
+  @keyframes letterIn{ to{ opacity:1; transform:translateY(0) rotate(0); } }
+
+  .hero p.tag{
+    margin-top:24px; font-size:clamp(1rem,2vw,1.25rem); color:var(--muted);
+    max-width:560px; margin-left:auto; margin-right:auto;
+    opacity:0; animation: fadeUp 0.8s 2.3s ease forwards;
+  }
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+
+  .hero-eq{
+    margin-top:34px; display:flex; justify-content:center; gap:5px; height:34px; align-items:flex-end;
+    opacity:0; animation: fadeUp 0.8s 2.5s ease forwards;
+  }
+  .hero-eq span{ width:6px; border-radius:3px; background:var(--gold); animation: bounce 1.05s ease-in-out infinite; }
+  .hero-eq span:nth-child(odd){ background:var(--red); }
+  .hero-eq span:nth-child(1){ height:40%; animation-delay:0s; }
+  .hero-eq span:nth-child(2){ height:100%; animation-delay:.1s; }
+  .hero-eq span:nth-child(3){ height:60%; animation-delay:.2s; }
+  .hero-eq span:nth-child(4){ height:90%; animation-delay:.3s; }
+  .hero-eq span:nth-child(5){ height:50%; animation-delay:.4s; }
+  .hero-eq span:nth-child(6){ height:75%; animation-delay:.5s; }
+  @keyframes bounce{ 0%,100%{transform:scaleY(.35);} 50%{transform:scaleY(1);} }
+
+  /* ---------- achievement bubbles ---------- */
+  .achievements{ position:absolute; inset:0; z-index:4; pointer-events:none; }
+
+  .bubble{
+    position:absolute; opacity:0; white-space:nowrap;
+    background:rgba(22,16,25,0.82); border:1px solid rgba(242,183,5,0.35);
+    border-radius:100px; padding:11px 20px; backdrop-filter:blur(6px);
+    box-shadow:0 10px 26px rgba(0,0,0,0.4);
+  }
+  .bubble .inner{ display:block; animation: bob 3.6s ease-in-out infinite; animation-delay:2.6s; }
+  .bubble b{ font-family:"Anton",sans-serif; color:var(--gold); font-size:1.02rem; letter-spacing:0.01em; margin-right:7px; }
+  .bubble span.inner{ color:var(--cream); font-size:0.82rem; }
+  @keyframes bob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
+
+  .bubble.left{ animation: popL 0.85s cubic-bezier(.34,1.56,.64,1) forwards; }
+  .bubble.right{ animation: popR 0.85s cubic-bezier(.34,1.56,.64,1) forwards; }
+  .bubble.up{ animation: popU 0.85s cubic-bezier(.34,1.56,.64,1) forwards; }
+  @keyframes popL{ 0%{opacity:0; transform:translateX(-140px) scale(.4) rotate(-8deg);} 100%{opacity:1; transform:translateX(0) scale(1) rotate(0deg);} }
+  @keyframes popR{ 0%{opacity:0; transform:translateX(140px) scale(.4) rotate(8deg);} 100%{opacity:1; transform:translateX(0) scale(1) rotate(0deg);} }
+  @keyframes popU{ 0%{opacity:0; transform:translate(-50%,90px) scale(.4);} 100%{opacity:1; transform:translate(-50%,0) scale(1);} }
+
+  .bubble.pos1{ top:20%; left:4%; animation-delay:2.15s; }
+  .bubble.pos2{ top:16%; right:4%; animation-delay:2.35s; }
+  .bubble.pos3{ top:56%; left:2%; animation-delay:2.55s; }
+  .bubble.pos4{ top:60%; right:2%; animation-delay:2.75s; }
+  .bubble.pos5{ bottom:12%; left:50%; animation-delay:2.95s; }
+  .bubble.pos1 .inner, .bubble.pos2 .inner{ animation-delay:3s; }
+  .bubble.pos3 .inner, .bubble.pos4 .inner{ animation-delay:3.3s; }
+  .bubble.pos5 .inner{ animation-delay:3.6s; }
+
+  @media (max-width:920px){
+    .achievements{
+      position:static; display:flex; flex-wrap:wrap; justify-content:center;
+      gap:10px; max-width:520px; margin:34px auto 0; padding:0 16px;
+    }
+    .bubble{ position:static !important; opacity:1 !important; transform:none !important; animation:none !important; }
+    .bubble .inner{ animation:none !important; }
+  }
+
+  /* ---------- platform icons ---------- */
+  .picon{ width:24px; height:24px; flex:none; color:var(--muted); transition:color .3s ease; }
+  .frow:hover .picon{ color:var(--ink); }
+  .picon-lg{ width:30px; height:30px; color:var(--gold); margin-bottom:14px; position:relative; z-index:1; display:block; }
+
+  .scroll-cue{
+    position:absolute; bottom:34px; left:50%; transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    font-size:0.72rem; letter-spacing:0.15em; color:var(--muted);
+    opacity:0; animation: fadeUp 0.8s 2.8s ease forwards;
+  }
+  .scroll-cue i{ width:1px; height:34px; background:linear-gradient(var(--gold), transparent); position:relative; overflow:hidden; }
+  .scroll-cue i::after{ content:""; position:absolute; top:-34px; left:0; width:100%; height:100%; background:var(--cream); animation: dropline 1.6s ease-in-out infinite; }
+  @keyframes dropline{ to{ top:34px; } }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
+  }
+
+  /* ---------- marquee ---------- */
+  .marquee-wrap{ position:relative; overflow:hidden; padding: 20px 0; background:var(--red); transform:rotate(-1.4deg) scale(1.03); z-index:3; }
+  .marquee-wrap.alt{ background:var(--gold); }
+  .marquee-track{ display:flex; width:max-content; animation: scrollL 22s linear infinite; }
+  .marquee-wrap.alt .marquee-track{ animation: scrollR 26s linear infinite; }
+  .marquee-track span{
+    font-family:"Anton", sans-serif; font-size: clamp(1.4rem, 4vw, 2.6rem);
+    color: var(--ink); padding:0 28px; white-space:nowrap; text-transform:uppercase;
+  }
+  .marquee-wrap.alt .marquee-track span{ color: var(--ink); }
+  @keyframes scrollL{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+  @keyframes scrollR{ from{transform:translateX(-50%);} to{transform:translateX(0);} }
+
+  /* ---------- reveal ---------- */
+  .reveal{ opacity:0; transform: translateY(50px); transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+  .reveal.delay1.in{ transition-delay:.08s; }
+  .reveal.delay2.in{ transition-delay:.16s; }
+  .reveal.delay3.in{ transition-delay:.24s; }
+  .reveal.delay4.in{ transition-delay:.32s; }
+
+  /* ---------- sections ---------- */
+  section{ position:relative; padding: 110px 6vw; }
+  .section-head{ text-align:center; margin-bottom:60px; }
+  .section-head .kicker{ color:var(--gold); font-size:0.85rem; letter-spacing:0.08em; }
+  .section-head h2{ font-size:clamp(2.4rem,6vw,4.2rem); margin-top:10px; }
+
+  .listen{ background: var(--bg); }
+
+  .panel-grid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:22px;
+    max-width:1080px; margin:0 auto;
+  }
+
+  .panel{
+    position:relative; display:block; text-decoration:none; color:var(--cream);
+    background: var(--bg-2); border:1px solid rgba(245,241,232,0.12);
+    border-radius:4px; padding:30px 24px; overflow:hidden;
+    transform: skewY(-1.2deg);
+    transition: transform .35s cubic-bezier(.16,1,.3,1), border-color .3s ease, background .3s ease;
+  }
+  .panel > *{ transform: skewY(1.2deg); display:block; }
+  .panel:nth-child(even){ transform: skewY(1.2deg); }
+  .panel:nth-child(even) > *{ transform: skewY(-1.2deg); }
+  .panel:hover{ transform: skewY(0) scale(1.035); border-color: var(--gold); background:#1f1723; }
+  .panel:hover > *{ transform: none; }
+
+  .panel .halftone{ opacity:0; transition: opacity .3s ease; }
+  .panel:hover .halftone{ opacity:1; }
+
+  .panel .plat{ font-family:"Anton", sans-serif; font-size:1.5rem; text-transform:uppercase; margin-bottom:8px; }
+  .panel .desc{ color:var(--muted); font-size:0.9rem; }
+  .panel .go{
+    display:inline-block; margin-top:18px; font-size:0.78rem; letter-spacing:0.1em;
+    color:var(--gold); border-top:1px solid rgba(242,183,5,0.3); padding-top:10px; width:100%;
+  }
+
+  /* ---------- poster / drop wall ---------- */
+  .poster{ background: linear-gradient(180deg, var(--bg) 0%, #14090b 100%); clip-path: polygon(0 4%, 100% 0, 100% 96%, 0 100%); }
+  .poster-grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:14px; max-width:1100px; margin:0 auto;
+  }
+  .card{
+    aspect-ratio: 3/4; border-radius:4px; position:relative; overflow:hidden;
+    display:flex; align-items:flex-end; padding:16px;
+    background: linear-gradient(160deg, var(--purple), var(--bg-2));
+    border:1px solid rgba(245,241,232,0.1);
+    transition: transform .35s ease;
+  }
+  .card:nth-child(3n+1){ background: linear-gradient(160deg, var(--red), #2a0508); }
+  .card:nth-child(3n+2){ background: linear-gradient(160deg, #7a5c00, var(--bg-2)); }
+  .card:hover{ transform: translateY(-8px) rotate(-1deg); }
+  .card span{ font-family:"Anton", sans-serif; font-size:1.05rem; text-transform:uppercase; line-height:1.05; text-shadow:0 2px 6px rgba(0,0,0,0.6); }
+  .card::before{ content:""; position:absolute; inset:0; background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1.4px); background-size:9px 9px; opacity:0.5; }
+
+  /* ---------- follow ---------- */
+  .follow{ background: var(--bg-2); }
+  .follow-list{ max-width:720px; margin:0 auto; display:flex; flex-direction:column; gap:2px; }
+  .frow{
+    display:flex; align-items:center; justify-content:space-between; text-decoration:none; color:var(--cream);
+    padding:22px 8px; border-bottom:1px solid rgba(245,241,232,0.12);
+    position:relative; overflow:hidden;
+  }
+  .frow::before{
+    content:""; position:absolute; left:0; top:0; bottom:0; width:0%;
+    background:var(--red); z-index:0; transition: width .35s cubic-bezier(.16,1,.3,1);
+  }
+  .frow:hover::before{ width:100%; }
+  .frow span, .frow em{ position:relative; z-index:1; }
+  .frow .fleft{ display:flex; align-items:center; gap:18px; }
+  .frow .name{ font-family:"Anton", sans-serif; font-size:clamp(1.3rem,3vw,2rem); text-transform:uppercase; }
+  .frow em{ font-style:normal; color:var(--muted); font-size:0.85rem; }
+  .frow:hover em{ color:var(--cream); }
+
+  /* ---------- footer ---------- */
+  footer{ background:#000; text-align:center; padding:70px 20px 40px; }
+  footer .fmark{ font-family:"Anton", sans-serif; font-size:clamp(2rem,6vw,3.2rem); color:var(--cream); margin-bottom:18px; }
+  footer p{ color:var(--muted); font-size:0.85rem; line-height:1.7; max-width:460px; margin:0 auto; }
+  footer a{ color:var(--gold); text-decoration:none; }
+  footer a:hover{ text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<div class="curtain"><div></div><div></div></div>
+<div class="cinebar top"></div>
+<div class="cinebar bottom"></div>
+
+<header class="hero" id="hero">
+  <div class="burst"></div>
+  <div class="halftone"></div>
+  <div class="hero-inner">
+    <span class="eyebrow-tag">Now streaming — bass reloaded</span>
+    <h1 class="title display"><span>M</span><span>x</span><span>h</span><span>x</span><span>k</span><span>s</span><span>h</span></h1>
+    <div class="hero-eq" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="achievements" aria-hidden="true">
+    <div class="bubble left pos1"><span class="inner"><b>100K+</b>Followers</span></div>
+    <div class="bubble right pos2"><span class="inner"><b>2B+</b>Total views across catalogue</span></div>
+    <div class="bubble left pos3"><span class="inner"><b>100+</b>Playlist placements</span></div>
+    <div class="bubble right pos4"><span class="inner"><b>20+</b>Times on global charts</span></div>
+    <div class="bubble up pos5"><span class="inner"><b>Collabs</b>Satinder Sartaj, Karan Aujla</span></div>
+  </div>
+
+  <div class="scroll-cue"><span>SCROLL</span><i></i></div>
+</header>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>BASS BOOSTED ✦ REMIXED ✦ RELOADED ✦ NOW STREAMING ✦ BASS BOOSTED ✦ REMIXED ✦ RELOADED ✦ NOW STREAMING ✦</span>
+    <span>BASS BOOSTED ✦ REMIXED ✦ RELOADED ✦ NOW STREAMING ✦ BASS BOOSTED ✦ REMIXED ✦ RELOADED ✦ NOW STREAMING ✦</span>
+  </div>
+</div>
+<div class="marquee-wrap alt">
+  <div class="marquee-track">
+    <span>100K+ FOLLOWERS ◆ 2B+ TOTAL VIEWS ◆ 100+ PLAYLIST PLACEMENTS ◆ 20+ TIMES ON GLOBAL CHARTS ◆</span>
+    <span>100K+ FOLLOWERS ◆ 2B+ TOTAL VIEWS ◆ 100+ PLAYLIST PLACEMENTS ◆ 20+ TIMES ON GLOBAL CHARTS ◆</span>
+  </div>
+</div>
+
+<section class="follow">
+  <div class="section-head reveal">
+    <div class="kicker">Stay close</div>
+    <h2 class="display">Follow</h2>
+  </div>
+  <div class="follow-list">
+    <a class="frow reveal" href="http://youtube.com/@mxhxksh" target="_blank" rel="noopener">
+      <span class="fleft"><svg class="picon" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M10 9l6 3-6 3V9z" fill="currentColor"/></svg><span class="name">YouTube</span></span>
+      <em>Watch →</em>
+    </a>
+    <a class="frow reveal delay1" href="https://www.instagram.com/mxhxksh/" target="_blank" rel="noopener">
+      <span class="fleft"><svg class="picon" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></svg><span class="name">Instagram</span></span>
+      <em>Follow →</em>
+    </a>
+    <a class="frow reveal delay2" href="https://x.com/Mxhxksh" target="_blank" rel="noopener">
+      <span class="fleft"><svg class="picon" viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="name">X</span></span>
+      <em>Follow →</em>
+    </a>
+    <a class="frow reveal delay3" href="https://soundcloud.com/mxhxksh" target="_blank" rel="noopener">
+      <span class="fleft"><svg class="picon" viewBox="0 0 24 24" fill="none"><path d="M6 16h10a4 4 0 0 0 .5-7.97A5.5 5.5 0 0 0 6.2 10.1 3.5 3.5 0 0 0 6 16z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="name">SoundCloud</span></span>
+      <em>Listen →</em>
+    </a>
+    <a class="frow reveal delay4" href="https://www.snapchat.com/@mxhxksh" target="_blank" rel="noopener">
+      <span class="fleft"><svg class="picon" viewBox="0 0 24 24" fill="none"><path d="M12 3c3 0 4.6 2.3 4.6 5.4 0 1 .1 1.7.3 2.1.5.2 1.6.2 1.9.9.2.6-.5 1-1.1 1.3.1.5.6.8.4 1.3-.2.5-1 .6-1.5.7-.1.5-.1 1-.9 1.1-.6.1-1.1-.3-1.7-.3-1 0-1.6 1.5-3 1.5s-2-1.5-3-1.5c-.6 0-1.1.4-1.7.3-.8-.1-.8-.6-.9-1.1-.5-.1-1.3-.2-1.5-.7-.2-.5.3-.8.4-1.3-.6-.3-1.3-.7-1.1-1.3.3-.7 1.4-.7 1.9-.9.2-.4.3-1.1.3-2.1C7.4 5.3 9 3 12 3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span class="name">Snapchat</span></span>
+      <em>Add →</em>
+    </a>
+    <a class="frow reveal delay1" href="mailto:mxhxksh@gmail.com">
+      <span class="fleft"><svg class="picon" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M4 6.5l8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="name">Email</span></span>
+      <em>Contact →</em>
+    </a>
+  </div>
+</section>
+
+<section class="listen">
+  <div class="section-head reveal">
+    <div class="kicker">Press play</div>
+    <h2 class="display">Listen</h2>
+  </div>
+  <div class="panel-grid">
+    <a class="panel reveal delay1" href="https://open.spotify.com/artist/3lljTUSjBlB3vbBCdDkaMe" target="_blank" rel="noopener">
+      <div class="halftone"></div>
+      <svg class="picon-lg" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.3" stroke="currentColor" stroke-width="1.5"/><path d="M7 14.5c3.2-1.4 6.8-1.4 10 0M7.8 11.3c2.9-1.1 5.5-1.1 8.4 0M8.6 8.3c2.3-.8 4.5-.8 6.8 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span class="plat">Spotify</span>
+      <span class="desc">Full artist catalog &amp; playlists</span>
+      <span class="go">PLAY NOW →</span>
+    </a>
+    <a class="panel reveal delay2" href="https://music.apple.com/in/artist/mxhxksh/1708798665" target="_blank" rel="noopener">
+      <div class="halftone"></div>
+      <svg class="picon-lg" viewBox="0 0 24 24" fill="none"><rect x="2.5" y="2.5" width="19" height="19" rx="6" stroke="currentColor" stroke-width="1.4"/><path d="M10 15.5V8.8l6-1.2v6.4M10 15.5a2 2 0 1 1-2-2 2 2 0 0 1 2 2zM16 13.5a2 2 0 1 1-2-2 2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      <span class="plat">Apple Music</span>
+      <span class="desc">Stream in lossless</span>
+      <span class="go">PLAY NOW →</span>
+    </a>
+    <a class="panel reveal delay3" href="https://music.youtube.com/channel/UCeoSPT3b1LdfUZLRx_z14fg" target="_blank" rel="noopener">
+      <div class="halftone"></div>
+      <svg class="picon-lg" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.3" stroke="currentColor" stroke-width="1.5"/><path d="M10 8.5l6 3.5-6 3.5v-7z" fill="currentColor"/></svg>
+      <span class="plat">YouTube Music</span>
+      <span class="desc">Videos &amp; audio uploads</span>
+      <span class="go">PLAY NOW →</span>
+    </a>
+    <a class="panel reveal delay4" href="https://www.jiosaavn.com/artist/mxhxksh-songs/fotowbmj7lI_" target="_blank" rel="noopener">
+      <div class="halftone"></div>
+      <svg class="picon-lg" viewBox="0 0 24 24" fill="none"><path d="M9 17a2.2 2.2 0 1 1-2.2-2.2A2.2 2.2 0 0 1 9 17z" fill="currentColor"/><path d="M9 17V6.8l9-1.6v9.2" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M18 14.4a2.2 2.2 0 1 1-2.2-2.2 2.2 2.2 0 0 1 2.2 2.2z" fill="currentColor"/></svg>
+      <span class="plat">JioSaavn</span>
+      <span class="desc">Hindi remixes &amp; reloads</span>
+      <span class="go">PLAY NOW →</span>
+    </a>
+  </div>
+  <p class="reveal" style="text-align:center;margin-top:34px;">
+    <a class="go" style="color:var(--gold)" href="https://songwhip.com/mxhxksh" target="_blank" rel="noopener">→ every platform in one link</a>
+  </p>
+</section>
+
+<footer>
+  <div class="fmark display">Mxhxksh</div>
+</footer>
+
+<script>
+  // custom cursor
+  const cursor = document.getElementById('cursor');
+  window.addEventListener('mousemove', e=>{
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, .panel, .card').forEach(el=>{
+    el.addEventListener('mouseenter', ()=>cursor.classList.add('big'));
+    el.addEventListener('mouseleave', ()=>cursor.classList.remove('big'));
+  });
+
+  // hero parallax
+  const hero = document.getElementById('hero');
+  hero.addEventListener('mousemove', e=>{
+    const r = hero.getBoundingClientRect();
+    const mx = (e.clientX - r.left - r.width/2);
+    const my = (e.clientY - r.top - r.height/2);
+    hero.style.setProperty('--mx', (mx/14).toFixed(1));
+    hero.style.setProperty('--my', (my/14).toFixed(1));
+  });
+
+  // scroll reveal
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+
+</body>
+</html>
