@@ -167,6 +167,32 @@
   .bubble.pos3 .inner, .bubble.pos4 .inner{ animation-delay:3.3s; }
   .bubble.pos5 .inner{ animation-delay:3.6s; }
 
+  /* ---------- collabs bubble (multi-row) ---------- */
+  .bubble.pos5{
+    white-space:normal; text-align:center; pointer-events:auto;
+    width:min(88vw,300px); max-width:min(88vw,300px);
+    border-radius:26px; padding:16px 22px;
+  }
+  .bubble.pos5 .inner{ display:flex; flex-direction:column; gap:6px; }
+  .bubble.pos5 b{ margin-right:0; }
+  .bubble.pos5 .collab-row{ color:var(--cream); font-size:0.82rem; line-height:1.45; }
+  .bubble.pos5 .collab-label{
+    display:block; color:var(--gold); font-size:0.68rem; font-weight:600;
+    letter-spacing:0.06em; margin-bottom:1px;
+  }
+  .bubble.pos5 a{
+    color:var(--cream); text-decoration:underline;
+    text-decoration-color:rgba(242,183,5,0.55); text-underline-offset:2px;
+    transition: color .2s ease, text-decoration-color .2s ease;
+  }
+  .bubble.pos5 a:hover{ color:var(--gold); text-decoration-color:var(--gold); }
+
+  @media (max-width:480px){
+    .bubble.pos5{ width:100%; max-width:320px; padding:14px 18px; }
+    .bubble.pos5 .collab-row{ font-size:0.78rem; }
+    .bubble.pos5 .collab-label{ font-size:0.63rem; }
+  }
+
   @media (max-width:920px){
     .achievements{
       position:static; display:flex; flex-wrap:wrap; justify-content:center;
@@ -319,7 +345,7 @@
     <div class="bubble right pos2"><span class="inner"><b>2B+</b>Total views across catalogue</span></div>
     <div class="bubble left pos3"><span class="inner"><b>100+</b>Playlist placements</span></div>
     <div class="bubble right pos4"><span class="inner"><b>20+</b>Times on global charts</span></div>
-    <div class="bubble up pos5"><span class="inner"><b>Collabs</b>Satinder Sartaj, Karan Aujla</span></div>
+    <div class="bubble up pos5"><span class="inner"><b>Collabs</b><span class="collab-row"><span class="collab-label">With Artists Like</span><a href="https://open.spotify.com/album/2wvhF5ZP4bwBNaqU2Mk0cS?si=jT_iXbmMQYi78WgyuFF0ag&amp;utm_source=copy-link" target="_blank" rel="noopener">Karan Aujla</a>, <a href="https://open.spotify.com/album/4HWYEbnxI3ZQgF8D8D9kL7?si=hvOHLthsRJyotXOqgpbb6A&amp;utm_source=copy-link" target="_blank" rel="noopener">Satinder Sartaj</a></span><span class="collab-row"><span class="collab-label">&amp; Companies Like</span>Saregama, Sony, Believe Music &amp; Google Music</span></span></div>
   </div>
 
   <div class="scroll-cue"><span>SCROLL</span><i></i></div>
@@ -344,7 +370,7 @@
     <h2 class="display">Follow</h2>
   </div>
   <div class="follow-list">
-    <a class="frow reveal" href="http://youtube.com/@mxhxksh" target="_blank" rel="noopener">
+    <a class="frow reveal" href="https://youtube.com/@mxhxksh" target="_blank" rel="noopener">
       <span class="fleft"><svg class="picon" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M10 9l6 3-6 3V9z" fill="currentColor"/></svg><span class="name">YouTube</span></span>
       <em>Watch →</em>
     </a>
@@ -364,7 +390,7 @@
       <span class="fleft"><svg class="picon" viewBox="0 0 24 24" fill="none"><path d="M12 3c3 0 4.6 2.3 4.6 5.4 0 1 .1 1.7.3 2.1.5.2 1.6.2 1.9.9.2.6-.5 1-1.1 1.3.1.5.6.8.4 1.3-.2.5-1 .6-1.5.7-.1.5-.1 1-.9 1.1-.6.1-1.1-.3-1.7-.3-1 0-1.6 1.5-3 1.5s-2-1.5-3-1.5c-.6 0-1.1.4-1.7.3-.8-.1-.8-.6-.9-1.1-.5-.1-1.3-.2-1.5-.7-.2-.5.3-.8.4-1.3-.6-.3-1.3-.7-1.1-1.3.3-.7 1.4-.7 1.9-.9.2-.4.3-1.1.3-2.1C7.4 5.3 9 3 12 3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span class="name">Snapchat</span></span>
       <em>Add →</em>
     </a>
-    <a class="frow reveal delay1" href="mailto:mxhxksh@gmail.com">
+    <a class="frow reveal delay1" href="mailto:hey@mxhxksh.social">
       <span class="fleft"><svg class="picon" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M4 6.5l8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="name">Email</span></span>
       <em>Contact →</em>
     </a>
